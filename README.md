@@ -64,11 +64,11 @@ Functionality list:
 
 Software needs at least Python 3.8.10 with additional libraries:
 
-- pandas 1.1.3
-- Pillow 9.2.0
-- matplotlib 3.3.2
-- numpy 1.22.4
-- openpyxl 2.4.2
+- numpy 2.3.5
+- matplotlib 3.10.7
+- pillow 12.0.0
+- pandas 2.3.3
+- openpyxl 3.1.5
   
 Install them with command
 
