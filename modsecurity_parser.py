@@ -562,9 +562,9 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
 
     # Bar chart "TOP 10 IP addresses"
     patches, texts, autotexts = ax21.pie(ipaddr_cnt_top10.values(), autopct='%1.1f%%',
-                                        shadow=True, startangle=90, radius=1.0)
+                                         shadow=True, startangle=90, radius=1.0)
     ax21.set_title(f'TOP {len(ipaddr_cnt_top10)} IP addresses (out of total {len(ipaddr_cnt)}) ',
-              bbox={'facecolor': '0.8', 'pad': 5})
+                   bbox={'facecolor': '0.8', 'pad': 5})
 
     # Legend for chart "TOP 10 IP addresses"
     # x_value = np.char.array(list(ipaddr_cnt_top10.keys()))
@@ -578,7 +578,7 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
 
     # Bar chart "TOP 10 Attacks intercepted"
     patches, texts, autotexts = ax31.pie(intercepted_cnt_top10.values(),
-                                        autopct='%1.1f%%', shadow=True, startangle=90, radius=1.0, normalize=True)
+                                         autopct='%1.1f%%', shadow=True, startangle=90, radius=1.0, normalize=True)
     [_.set_fontsize(7) for _ in texts]
     ax31.set_title('TOP 10 Attacks intercepted', bbox={'facecolor': '0.8', 'pad': 5})
 
