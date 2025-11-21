@@ -554,18 +554,16 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
     if event_times_range_seconds < 1800:
         short_time_range_message = 'Creating timeline graph is not available for timespan ' + \
                                    str(event_times_range_seconds) + ' seconds, skipping ...'
-        plt.subplot(ax1)
-        plt.text(0.5, 0.5, short_time_range_message, horizontalalignment='center', verticalalignment='center')
-        plt.title(plot_title)
+        ax1.text(0.5, 0.5, short_time_range_message, horizontalalignment='center', verticalalignment='center')
+        ax1.set_title(plot_title)
     else:
         ex = events_df.groupby(pd.Grouper(key='date', freq=periods)).sum(numeric_only=True)
         ex.plot(ax=ax1, kind='bar', title=plot_title, stacked=True, color={'purple', 'red'}, fontsize=7, rot=45)
 
     # Bar chart "TOP 10 IP addresses"
-    plt.subplot(ax21)
-    patches, texts, autotexts = plt.pie(ipaddr_cnt_top10.values(), autopct='%1.1f%%',
+    patches, texts, autotexts = ax21.pie(ipaddr_cnt_top10.values(), autopct='%1.1f%%',
                                         shadow=True, startangle=90, radius=1.0)
-    plt.title(f'TOP {len(ipaddr_cnt_top10)} IP addresses (out of total {len(ipaddr_cnt)}) ',
+    ax21.set_title(f'TOP {len(ipaddr_cnt_top10)} IP addresses (out of total {len(ipaddr_cnt)}) ',
               bbox={'facecolor': '0.8', 'pad': 5})
 
     # Legend for chart "TOP 10 IP addresses"
@@ -575,16 +573,14 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
               zip(ipaddr_cnt_top10.keys(), ipaddr_cnt_top10.values())]
     if len(ipaddr_cnt_top10.keys()) >= 1:
         patches, labels, dummy = zip(*sorted(zip(patches, labels, y_value), key=lambda x: x[2], reverse=True))
-        plt.subplot(ax22)
-        plt.axis('off')
-        plt.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
+        ax22.axis('off')
+        ax22.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
 
     # Bar chart "TOP 10 Attacks intercepted"
-    plt.subplot(ax31)
-    patches, texts, autotexts = plt.pie(intercepted_cnt_top10.values(),
+    patches, texts, autotexts = ax31.pie(intercepted_cnt_top10.values(),
                                         autopct='%1.1f%%', shadow=True, startangle=90, radius=1.0, normalize=True)
     [_.set_fontsize(7) for _ in texts]
-    plt.title('TOP 10 Attacks intercepted', bbox={'facecolor': '0.8', 'pad': 5})
+    ax31.set_title('TOP 10 Attacks intercepted', bbox={'facecolor': '0.8', 'pad': 5})
 
     # Legend for chart "TOP 10 Attacks intercepted"
     # x_value = np.char.array(list(intercepted_cnt_top10.keys()))
@@ -593,23 +589,20 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
               for i, j in zip(intercepted_cnt_top10.keys(), intercepted_cnt_top10.values())]
     if len(intercepted_cnt_top10.values()) >= 1:
         patches, labels, dummy = zip(*sorted(zip(patches, labels, y_value), key=lambda x: x[2], reverse=True))
-        plt.subplot(ax32)
-        plt.axis('off')
-        plt.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
+        ax32.axis('off')
+        ax32.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
     else:
-        plt.subplot(ax32)
-        plt.axis('off')
-        plt.text(
+        ax32.axis('off')
+        ax32.text(
             0.5, 0.5, 'No intercepted events found for given data set',
             horizontalalignment='center', verticalalignment='center')
 
     # Bar chart "TOP 20 Rule IDs hit"
-    plt.subplot(ax41)
-    patches, texts, autotexts = plt.pie(
+    patches, texts, autotexts = ax41.pie(
         event_messages_ids_top20.values(),
         autopct='%1.1f%%', shadow=True, startangle=90, radius=1.0, normalize=True)
     _ = autotexts
-    plt.title('TOP 20 Rule IDs hit', bbox={'facecolor': '0.8', 'pad': 5})
+    ax41.set_title('TOP 20 Rule IDs hit', bbox={'facecolor': '0.8', 'pad': 5})
 
     # Legend for chart "TOP 20 Rule IDs hit"
     # x_value = np.char.array(list(event_messages_ids_top20.keys()))
@@ -620,15 +613,16 @@ def modsec_view_graphs(modsec_dict):  # noqa: C901
     if len(event_messages_ids_top20.keys()) >= 1:
         patches, labels, dummy = zip(*sorted(zip(patches, labels, y_value),
                                      key=lambda x_value: x_value[2], reverse=True))
-        plt.subplot(ax42, axis='off')
-        plt.axis('off')
-        plt.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
+        ax42.axis('off')
+        ax42.legend(patches, labels, loc='center left', bbox_to_anchor=(-0.1, 1.), fontsize=7)
 
     # GRID VERSION END
 
     graph_title = 'Modsecurity events ' + str(datetimenow) + \
         ' from file: ' + input_filename + ' first ' + str(MAXEVENTS) + ' analyzed'
-    fig.canvas.set_window_title(graph_title)
+    # set_window_title is removed in matplotlib 3.10+ as it's only for interactive displays
+    # Since we're using Agg backend for file output, we use suptitle instead
+    fig.suptitle(graph_title, fontsize=10, y=0.995)
     fig.set_size_inches(18, 11)
     # plt.get_current_fig_manager().window.wm_geometry("+10+10")
     try:
